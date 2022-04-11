@@ -15,7 +15,7 @@ Facebook:
                 Messenger, 1 unread
                 Notifications, 2 unread
 LinkedIn:
-        No unread notifications
+        2 notifications found
 Instagram:
         No unread notifications
 ```
