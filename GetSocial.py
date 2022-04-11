@@ -29,15 +29,12 @@ def get_linkedin(driver):
     print("LinkedIn:")
     url = 'https://www.linkedin.com/feed/'
     driver.get(url)
-    els = driver.find_elements(By.XPATH, "//*[contains(@aria-label, 'unread')]")
-    notifications = set()
+    els = driver.find_elements(By.CLASS_NAME, "notification-badge__count")
+    count = 0
     for el in els:
-        notifications.add(el.get_attribute('aria-label'))
-    
-    if notifications:
-        print(f"\t{len(notifications)} notifications found:")
-        for notif in notifications:
-            print(f"\t \t{notif}")
+        count += int(el.text)
+    if count:
+        print(f"\t{count} notifications found")
     else:
         print("\tNo unread notifications")
 
@@ -58,3 +55,4 @@ if __name__ == "__main__":
     get_facebook(driver)
     get_linkedin(driver)
     get_instagram(driver)
+    driver.quit()
