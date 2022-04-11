@@ -42,8 +42,10 @@ def get_instagram(driver):
     print("Instagram:")
     url = 'https://www.instagram.com/accounts/activity/'
     driver.get(url)
-    time.sleep(5)
 
+    # Wait for graphQL calss to resolve on startup
+    time.sleep(5)
+    
     els = driver.find_elements(By.XPATH, "//*[text()='New']")
     if els:
         print("\tNew notifications found")
