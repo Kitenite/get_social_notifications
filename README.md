@@ -7,6 +7,18 @@ It's...complicated. You need Selenium installed, and a Chrome driver installed.
 Then, the first time it runs you need to sign into those platforms before it works. 
 I could implement sign in with the driver but I can't be bothered. 
 
+Example usage:
+```
+$ Python GetSocial.py
+Facebook:
+        2 notifications found:
+                Messenger, 1 unread
+                Notifications, 2 unread
+LinkedIn:
+        No unread notifications
+Instagram:
+        No unread notifications
+```
 ## Alternatives:
 
 I had a different version of this using BeautifulSoup and Chrome cookies for signin. 
