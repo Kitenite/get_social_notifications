@@ -1,89 +1,60 @@
-from platform import platform
-from bs4 import BeautifulSoup
-import requests
-import json
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 import time
-from pycookiecheat import chrome_cookies
 
+def startChrome():
+    options = webdriver.ChromeOptions() 
+    options.add_argument("user-data-dir=/Users/kietho/Library/Application\ Support/Google/Chrome/Default")
+    driver = webdriver.Chrome(options=options)
+    driver.set_page_load_timeout(60)
+    return driver
 
-"""
-Entry
-Get credentials
-Sign in for each link
-Get HTML
+def get_facebook(driver):
+    print("Facebook:")
+    url = 'https://www.facebook.com'
+    driver.get(url)
+    els = driver.find_elements(By.XPATH, "//*[contains(@aria-label, 'unread')]")
+    notifications = set()
+    for el in els:
+        notifications.add(el.get_attribute('aria-label'))
+    
+    if notifications:
+        print(f"\t{len(notifications)} notifications found:")
+        for notif in notifications:
+            print(f"\t \t{notif}")
+    else:
+        print("\tNo unread notifications")
 
-class getsocial
-    init
-        give creds object
+def get_linkedin(driver):
+    print("LinkedIn:")
+    url = 'https://www.linkedin.com/feed/'
+    driver.get(url)
+    els = driver.find_elements(By.XPATH, "//*[contains(@aria-label, 'unread')]")
+    notifications = set()
+    for el in els:
+        notifications.add(el.get_attribute('aria-label'))
+    
+    if notifications:
+        print(f"\t{len(notifications)} notifications found:")
+        for notif in notifications:
+            print(f"\t \t{notif}")
+    else:
+        print("\tNo unread notifications")
 
-    get notifications for each platform based on object
-        use scraper for helpers
+def get_instagram(driver):
+    print("Instagram:")
+    url = 'https://www.instagram.com/accounts/activity/'
+    driver.get(url)
+    time.sleep(5)
 
-"""
+    els = driver.find_elements(By.XPATH, "//*[text()='New']")
+    if els:
+        print("\tNew notifications found")
+    else:
+        print("\tNo unread notifications")
 
-cred_path = "/Users/kietho/Repos/fun/GetNotifications/credentials.json" 
-
-class SocialManager():
-    platforms = None
-
-    def __init__(self, cred_path):
-        self.platforms = self.json_to_obj(cred_path)
-        # Infer link if none are provided 
-        for key in self.platforms:
-            if "link" not in  self.platforms[key]:
-                self.platforms[key]["link"] = f"https://www.{key}.com/"         
-
-    def json_to_obj(self, filename):
-        # Helper to extract data from JSON file
-        obj = None
-        with open(filename) as json_file:
-            obj = json.loads(json_file.read())
-        return obj
-
-    def get_notifications(self):
-        for key in self.platforms:
-            url = self.platforms[key]['notification_link']
-            soup = self.get_soup_using_cookies(url)
-            print(f"Getting notification for {key}:")
-            # parse notifications
-            # if key == 'facebook':
-            #     self.parse_facebook(soup)
-            # elif key == 'instagram':
-            #     self.parse_instagram(soup)
-            if key == 'linkedin':
-                self.parse_linkedin(soup)
-            # else:
-            #     print(f"Unknown key for platform: {key}")
-
-    def parse_facebook(self, soup):
-        notification_list = soup.find("div", {"id": "notifications_list"})
-        print(notification_list)
-
-    def parse_instagram(self, soup):
-        print(soup.prettify())
-
-            
-    def parse_linkedin(self, soup):
-        # print(soup.prettify())
-        print(soup.findAll('a'))
-        for a in soup.find_all('a', href="/accounts/activity/"):
-            print(a)
-
-    def get_soup_using_cookies(self, url):
-        s = requests.Session()
-        cookies = chrome_cookies(url)
-        response = s.get(url, cookies = cookies)
-        return BeautifulSoup(response.text, 'html.parser')
-
-# def get_by_tag(url):
-#     soup = BeautifulSoup(get_html(url), 'html.parser')
-#     print(soup.prettify())
-#     tags=soup.findAll('img')
-#     clr_img_urls = [tag['src'].strip() for tag in tags]
-#     return clr_img_urls
-
-
-
-if __name__ == '__main__':
-    credManager = SocialManager(cred_path)
-    credManager.get_notifications()
+if __name__ == "__main__":
+    driver = startChrome()
+    get_facebook(driver)
+    get_linkedin(driver)
+    get_instagram(driver)
